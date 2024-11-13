@@ -4,8 +4,11 @@ from paho.mqtt import client as mqtt_client
 # MQTT Broker details (update the broker IP as needed)
 broker = '127.0.0.1'
 port = 1883
-topic = "blablabla"
+topic = "MQTT_Tags_sampa"
 client_id = f'subscriber-{random.randint(0, 100)}'
+
+username = 'admin'
+password = 'admin'
 
 def connect_mqtt():
     client = mqtt_client.Client(client_id=client_id)
@@ -15,7 +18,8 @@ def connect_mqtt():
             print("Connected to MQTT Broker!")
         else:
             print("Failed to connect, return code %d\n", rc)
-
+   
+    client.username_pw_set(username, password)
     client.on_connect = on_connect
     client.connect(broker, port)
     return client
