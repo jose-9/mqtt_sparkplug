@@ -56,8 +56,8 @@ protoc --python_out=. sparkplug_b.proto
 
 
 
-### Trouble shooting
-#### File location
+## Trouble shooting
+### File location
 Here are the steps:
 
 Navigate to the Directory: Change to the tahu directory where the .proto file is located:
@@ -70,7 +70,7 @@ Run the protoc Command with Path: Now, generate the Python file by running:
 protoc --python_out=. sparkplug_b/sparkplug_b.proto
 
 
-#### File version
+### File version
 The error you're seeing suggests that the protobuf version installed is incompatible with the generated sparkplug_b_pb2.py file. Here are a few ways to resolve it:
 
 Solution 1: Downgrade the protobuf Version
@@ -85,3 +85,21 @@ Navigate to the directory containing your .proto file (e.g., tahu/sparkplug_b/) 
 
 *bash*
 protoc --python_out=. sparkplug_b.proto
+
+
+
+### Datatype error
+Here's how you might update your publisher_mqtt.py script:
+
+python
+'''
+# Assuming you want to use Int32 as the datatype for a metric
+metric.datatype = sparkplug_b_pb2.DataType.Int32
+Make sure each datatype assignment in your script matches exactly with the DataType names defined in the .proto file, like Int8, Int16, Int32, etc.
+'''
+
+Re-generate the Python Bindings (If Not Done Already)
+If you haven’t done this after defining the .proto file, use protoc to generate the updated Python bindings:
+
+*bash*
+protoc --python_out=. tahu/sparkplug_b/sparkplug_b.proto
