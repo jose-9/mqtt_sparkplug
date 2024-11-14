@@ -1,0 +1,10 @@
+# Ignore the tahu library directory (adjust path as needed)
+tahu/
+
+# Ignore Python bytecode files and cache directories
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore the MQTT_ENV virtual environment directory
+MQTT_ENV/
