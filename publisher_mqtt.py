@@ -1,50 +1,66 @@
 import time
 import random
 from paho.mqtt import client as mqtt_client
-from sparkplug_b import sparkplug_b_pb2  # Import the Sparkplug B protobuf schema
+from tahu.sparkplug_b import sparkplug_b_pb2
+
+# from sparkplug_b import sparkplug_b_pb2  # Import the generated Sparkplug B protobuf definitions
 
 # MQTT Broker details
-broker = '127.0.0.1'  # Replace with your broker's IP
+broker = 'broker.emqx.io'
 port = 1883
+topic = "spBv1.0/mygroup_id/NBIRTH/my_node_id"
+client_id = f'sparkplug_publisher_{random.randint(0, 1000)}'
 
-# Sparkplug B topic and client details
-group_id = "myGroup"
-message_type = "NDATA"  # "NDATA" for node data, "DATAB" for device data, etc.
-edge_node_id = "myEdgeNode"
-device_id = "myDevice"
-client_id = f'publisher-{random.randint(0, 100)}'
-topic = f"spBv1.0/{group_id}/{message_type}/{edge_node_id}/{device_id}"
+# Sparkplug B details
+namespace = "spBv1.0"  # Sparkplug namespace
+group_id = "mygroup_id"
+node_id = "my_node_id"
+device_id = "my_device_id"
 
-def create_sparkplug_payload():
-    # Create Sparkplug B payload
-    payload = sparkplug_b_pb2.Payload()
-    payload.timestamp = int(time.time() * 1000)  # Timestamp in milliseconds
-    
-    # Define metrics as per Sparkplug B format, e.g., a simple integer metric
-    metric = payload.metrics.add()
-    metric.name = "exampleMetric"
-    metric.alias = 1  # Alias is a unique identifier for this metric
-    metric.timestamp = payload.timestamp
-    metric.int_value = random.randint(0, 100)  # Random integer for demonstration
-    
-    return payload.SerializeToString()
 
 def connect_mqtt():
     client = mqtt_client.Client(client_id=client_id)
     client.connect(broker, port)
     return client
 
+
+def create_payload():
+    """Creates a Sparkplug B payload for publishing"""
+    payload = sparkplug_b_pb2.Payload()
+
+    # Set timestamp
+    payload.timestamp = int(time.time() * 1000)
+
+    # Add a metric (example)
+    metric = payload.metrics.add()
+    metric.name = "temperature"
+    metric.alias = 1
+    metric.timestamp = payload.timestamp
+    # Assuming you want to use Int32 as the datatype for a metric
+    metric.datatype = sparkplug_b_pb2.DataType.Int32
+
+    # metric.datatype = sparkplug_b_pb2.Payload.Metric.Int32
+    metric.int_value = random.randint(20, 30)  # Random temperature data
+
+    return payload
+
+
 def publish(client):
     while True:
-        # Create Sparkplug B formatted payload
-        msg = create_sparkplug_payload()
-        result = client.publish(topic, msg)
+        payload = create_payload()
+        # Serialize the payload to bytes for Sparkplug B
+        payload_bytes = payload.SerializeToString()
+        
+        # Publish the message to the MQTT broker
+        result = client.publish(topic, payload_bytes)
         status = result[0]
         if status == 0:
-            print(f"Sent Sparkplug B message to topic `{topic}`")
+            print(f"Sent Sparkplug message to topic `{topic}`")
         else:
             print(f"Failed to send message to topic {topic}")
-        time.sleep(5)
+        
+        time.sleep(5)  # Adjust the interval as needed
+
 
 if __name__ == '__main__':
     client = connect_mqtt()
