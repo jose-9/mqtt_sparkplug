@@ -4,7 +4,9 @@ from paho.mqtt import client as mqtt_client
 import socket
 
 # MQTT Broker details (update the broker IP as needed)
-broker = '127.0.0.1'
+broker = 'broker.emqx.io'
+#'127.0.0.1'
+
 port = 1883
 topic = "MQTT_Tags_sampa"
 client_id = f'publisher-{random.randint(0, 100)}'
