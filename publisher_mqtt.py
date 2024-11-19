@@ -1,9 +1,18 @@
 import time
 import random
+import sys
+import os
 from paho.mqtt import client as mqtt_client
-from tahu.sparkplug_b import sparkplug_b_pb2
 
-# from sparkplug_b import sparkplug_b_pb2  # Import the generated Sparkplug B protobuf definitions
+sys.path.append(os.path.join(os.path.dirname(__file__), 'tahu', 'python', 'core'))
+# import sparkplug_b_pb2
+
+try:
+    import sparkplug_b_pb2
+except ImportError as e:
+    print(f"Error importing Sparkplug B library: {e}")
+    sys.exit(1)
+
 
 # MQTT Broker details
 broker = 'broker.emqx.io'
