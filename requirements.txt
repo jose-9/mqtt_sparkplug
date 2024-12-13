@@ -1,2 +1,6 @@
-paho-mqtt
-protobuf
+# paho-mqtt
+# protobuf
+
+paho-mqtt==1.6.1
+protobuf==3.20.0
+# git+https://github.com/eclipse/tahu.git@main  # Include the Tahu library
