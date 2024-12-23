@@ -22,10 +22,8 @@ except ImportError as e:
 
 # MQTT Broker details
 broker = "127.0.0.1"
-# broker = 'broker.emqx.io'
 port = 1883
 topic = "spBv1.0/#"
-# topic = "sparkLARI/G20/NBIRTH/nodelet"
 
 #NBIRTH/my_node_id"
 client_id = f'sparkplug_subscriber_{random.randint(0, 1000)}'
